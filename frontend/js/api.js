@@ -127,7 +127,7 @@ function handleLocalClientRequest(url, options = {}) {
 
     const presentVsAbsentChart = [
       { label: 'Present', count: totalPresent, percentage: totalAtt > 0 ? parseFloat(((totalPresent / totalAtt) * 100).toFixed(1)) : 0, color: '#10b981' },
-      { label: 'Absent', count: totalAtt - totalPresent, percentage: totalAtt > 0 ? parseFloat(((totalAtt - totalPresent) / totalAtt) * 100).toFixed(1)) : 0, color: '#ef4444' }
+      { label: 'Absent', count: totalAtt - totalPresent, percentage: totalAtt > 0 ? parseFloat(((totalAtt - totalPresent) / totalAtt) * 100).toFixed(1) : 0, color: '#ef4444' }
     ];
 
     const subjectAttChart = localSubjects.map(sub => {
