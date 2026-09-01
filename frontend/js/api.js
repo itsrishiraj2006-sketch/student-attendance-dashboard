@@ -62,7 +62,7 @@ function saveLocalState() {
   localStorage.setItem('student_dashboard_attendance', JSON.stringify(localAttendance));
 }
 
-// Fetch helper with fallback to local client state
+// Fetch helper with robust fallback to local client state for static hosting (GitHub Pages)
 async function apiFetch(url, options = {}) {
   try {
     const defaultHeaders = {
@@ -80,16 +80,19 @@ async function apiFetch(url, options = {}) {
       }
     }
   } catch (err) {
-    // Network or static hosting error -> fall back to local client store
+    // Network error -> fallback
   }
 
+  // Fallback to client-side data store on static hosting (GitHub Pages)
   return handleLocalClientRequest(url, options);
 }
 
 // Local Client Request Handler for static hosting environments (e.g. GitHub Pages)
 function handleLocalClientRequest(url, options = {}) {
   const method = (options.method || 'GET').toUpperCase();
-  const urlObj = new URL(url, window.location.origin);
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost';
+  const fullUrl = url.startsWith('http') ? url : origin + url;
+  const urlObj = new URL(fullUrl);
   const path = urlObj.pathname;
   const params = urlObj.searchParams;
 
