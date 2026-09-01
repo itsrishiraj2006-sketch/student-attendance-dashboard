@@ -230,8 +230,37 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/api.js?v=2"></script>
-  <script src="js/charts.js?v=2"></script>
-  <script src="js/dashboard.js?v=2"></script>
+  <script src="js/api.js?v=3"></script>
+  <script src="js/charts.js?v=3"></script>
+  <script src="js/dashboard.js?v=3"></script>
+  <script>
+    // Inline Safety Initializer to guarantee rendering on cached browsers
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var kpiTotal = document.getElementById('kpi-total-students');
+        if (kpiTotal && (kpiTotal.textContent === '--' || kpiTotal.textContent === '')) {
+          console.log('Triggering inline safety data renderer...');
+          if (window.API && typeof API.getDashboardData === 'function') {
+            API.getDashboardData({ class: 'All', division: 'All', subject_id: 'All' }).then(function(res) {
+              if (res && res.success) {
+                var kpis = res.data.kpis;
+                var charts = res.data.charts;
+                document.getElementById('kpi-total-students').textContent = kpis.totalStudents;
+                document.getElementById('kpi-present-today').textContent = kpis.presentToday;
+                document.getElementById('kpi-absent-today').textContent = kpis.absentToday;
+                document.getElementById('kpi-overall-percentage').textContent = kpis.overallAttendancePercentage + '%';
+                if (window.Charts) {
+                  Charts.renderStudentBarChart('chart-student-attendance', charts.studentAttendance);
+                  Charts.renderDonutChart('chart-present-vs-absent', charts.presentVsAbsent);
+                  Charts.renderSubjectBarChart('chart-subject-attendance', charts.subjectAttendance);
+                  Charts.renderTrendLineChart('chart-attendance-trend', charts.trendAttendance, 'daily');
+                }
+              }
+            });
+          }
+        }
+      }, 500);
+    });
+  </script>
 </body>
 </html>
