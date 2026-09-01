@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Attendance Dashboard - Overview</title>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- D3.js v7 CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="logo-text">
+        <h2>EduTrack</h2>
+        <span>Attendance System</span>
+      </div>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item active"><a href="index.html"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+      <li class="nav-item"><a href="students.html"><i class="fa-solid fa-user-graduate"></i> Students</a></li>
+      <li class="nav-item"><a href="attendance.html"><i class="fa-solid fa-clipboard-user"></i> Attendance</a></li>
+      <li class="nav-item"><a href="analytics.html"><i class="fa-solid fa-chart-line"></i> Analytics</a></li>
+      <li class="nav-item"><a href="reports.html"><i class="fa-solid fa-file-invoice"></i> Reports</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>B.Tech 2nd Year D3.js Project</p>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Navigation Bar -->
+    <header class="top-navbar">
+      <div class="nav-left">
+        <button class="mobile-toggle" id="mobile-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">
+          <h1>Dashboard Overview</h1>
+          <p>Interactive Attendance Visualizations & Real-Time Monitoring</p>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="global-search" placeholder="Search student or roll no...">
+        </div>
+        <div class="date-display" id="current-date-display">
+          <i class="fa-regular fa-calendar"></i>
+          <span>Sep 01, 2026</span>
+        </div>
+        <div class="notification-badge">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notification-dot"></span>
+        </div>
+        <div class="user-profile">
+          <div class="avatar">AD</div>
+          <div class="user-info">
+            <div class="user-name">Dr. Rajesh Sharma</div>
+            <div class="user-role">Faculty / HOD CSE</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="content-container">
+
+      <!-- Interactive Global Filters Bar -->
+      <section class="filter-bar">
+        <div class="filter-title">
+          <i class="fa-solid fa-sliders"></i> Filter Dashboard Data:
+        </div>
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label>Class</label>
+            <select id="filter-class">
+              <option value="All">All Classes</option>
+              <option value="2A">Class 2A</option>
+              <option value="2B">Class 2B</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Division</label>
+            <select id="filter-division">
+              <option value="All">All Divisions</option>
+              <option value="D1">Division D1</option>
+              <option value="D2">Division D2</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Subject</label>
+            <select id="filter-subject">
+              <option value="All">All Subjects</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Date</label>
+            <input type="date" id="filter-date" value="2026-09-01">
+          </div>
+          <div class="filter-group">
+            <label>Status</label>
+            <select id="filter-status">
+              <option value="All">All Status</option>
+              <option value="Present">Present Only</option>
+              <option value="Absent">Absent Only</option>
+            </select>
+          </div>
+          <button class="btn-reset" id="btn-reset-filters"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+        </div>
+      </section>
+
+      <!-- KPI Cards Grid -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h3>Total Students</h3>
+            <div class="kpi-value" id="kpi-total-students">--</div>
+            <div class="kpi-subtext">Enrolled in Cohort</div>
+          </div>
+          <div class="kpi-icon blue"><i class="fa-solid fa-user-group"></i></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h3>Present Today</h3>
+            <div class="kpi-value" id="kpi-present-today">--</div>
+            <div class="kpi-subtext" id="kpi-present-subtext">Active Attendance</div>
+          </div>
+          <div class="kpi-icon green"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h3>Absent Today</h3>
+            <div class="kpi-value" id="kpi-absent-today">--</div>
+            <div class="kpi-subtext">Requires Attention</div>
+          </div>
+          <div class="kpi-icon red"><i class="fa-solid fa-circle-xmark"></i></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-info">
+            <h3>Overall Attendance</h3>
+            <div class="kpi-value" id="kpi-overall-percentage">--%</div>
+            <div class="kpi-subtext">Target: 75% Min.</div>
+          </div>
+          <div class="kpi-icon orange"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+      </section>
+
+      <!-- D3.js Charts Grid -->
+      <section class="charts-grid">
+
+        <!-- Chart 1: Student Attendance Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <h3>Student Attendance (%)</h3>
+              <p>Bars in red indicate attendance below 75% threshold. Click bar for details.</p>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-student-attendance"></div>
+        </div>
+
+        <!-- Chart 2: Present vs Absent Donut Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <h3>Present vs Absent Breakdown</h3>
+              <p>Ratio of total present classes to absent classes</p>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-present-vs-absent"></div>
+        </div>
+
+        <!-- Chart 3: Subject-wise Attendance Bar Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <h3>Subject-wise Attendance</h3>
+              <p>Comparison of attendance rates across core curriculum subjects</p>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-subject-attendance"></div>
+        </div>
+
+        <!-- Chart 4: Attendance Trend Line Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">
+              <h3>Attendance Trend</h3>
+              <p>Track attendance rate timeline over time</p>
+            </div>
+            <div class="chart-actions">
+              <button class="chart-toggle-btn active" data-period="daily">Daily</button>
+              <button class="chart-toggle-btn" data-period="weekly">Weekly</button>
+              <button class="chart-toggle-btn" data-period="monthly">Monthly</button>
+            </div>
+          </div>
+          <div class="chart-container" id="chart-attendance-trend"></div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Student Profile Detail Modal -->
+  <div class="modal-overlay" id="student-detail-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-student-name">Student Profile</h3>
+        <button class="modal-close" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="modal-student-body">
+        <!-- Dynamic Profile Content Loaded via JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-modal-done">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
